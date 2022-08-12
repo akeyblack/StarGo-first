@@ -1,4 +1,4 @@
-import { BadGatewayException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { ConfigService } from '@nestjs/config';
 import { S3 } from "aws-sdk";
 import { Readable } from "stream";
@@ -24,7 +24,7 @@ export class FilesService {
     }
     const result = await this.s3.upload(params, (err: Error) => {
       if(err)
-        throw new BadGatewayException();
+        throw err;
     }).promise();
 
     return result.Location;
@@ -34,7 +34,7 @@ export class FilesService {
   async downloadFile(key: string): Promise<Readable> {
     const params = {
       Bucket: this.bucketName,
-      Key: String(id)
+      Key: String(key)
     }
 
     return this.s3.getObject(params).createReadStream()

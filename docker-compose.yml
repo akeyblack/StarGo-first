@@ -9,7 +9,17 @@ services:
       - ./docker/mysql:/var/lib/mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-firstapp}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-firstapp}
-      MYSQL_USER: ${DB_USERNAME:-firstapp}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpass}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-password}
+      MYSQL_USER: ${DB_USERNAME:-user}
       MYSQL_DATABASE: ${DB_NAME:-firstapp}
+  test:
+    image: mysql:8
+    ports:
+      - 3307:3306
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_PASSWORD: test
+      MYSQL_USER: test
+      MYSQL_DATABASE: test

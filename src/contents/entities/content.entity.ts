@@ -9,11 +9,17 @@ export class Content {
   filename: string;
 
   @Column()
-  mimetype: string;
+  type: string;
 
   @Column()
-  url: string;
+  subtype: string;
+
+  @Column('timestamp')
+  date: Date;
 
   @Column()
-  date: number;
+  size: number;
+
+  @Column()
+  extension: string;
 }
