@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  db:
+    image: mysql:8
+    ports:
+      - ${DB_PORT:-3306}:3306
+    volumes:
+      - ./docker/mysql:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-firstapp}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-firstapp}
+      MYSQL_USER: ${DB_USERNAME:-firstapp}
+      MYSQL_DATABASE: ${DB_NAME:-firstapp}
