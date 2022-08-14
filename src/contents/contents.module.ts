@@ -4,6 +4,7 @@ import { ContentsController } from './contents.controller';
 import { Content } from './entities/content.entity';
 import { ContentsService } from './contents.service';
 import { FilesModule } from '../files/files.module';
+import { Transcription } from './entities/transcription.entity';
 
 @Module({
   providers: [ContentsService],
@@ -11,6 +12,7 @@ import { FilesModule } from '../files/files.module';
   imports: [
     TypeOrmModule.forFeature([
       Content,
+      Transcription,
     ]),
     FilesModule,
   ]

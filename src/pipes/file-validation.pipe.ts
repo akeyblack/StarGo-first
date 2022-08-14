@@ -19,7 +19,7 @@ export class FileValidationPipe implements PipeTransform<any> {
       throw new BadRequestException("Filename length must be up to 100");
     }
 
-    const [type, format] = file.mimetype.split('/');
+    const type = file.mimetype.split('/')[0];
     switch(type) {
       case 'audio':
         if(file.size > 25*1024*1024)
@@ -34,7 +34,6 @@ export class FileValidationPipe implements PipeTransform<any> {
     }
 
     value.type = type;
-    value.subtype = format;
     value.extension = file.originalname.split('.').pop();
     
     return value;

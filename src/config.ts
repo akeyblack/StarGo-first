@@ -12,10 +12,13 @@ export const config = () => ({
     logging: false,
     entities: ['dist/**/entities/*.entity.js'],
   },
-  awsBucket: {
-    name: env.AWS_BUCKET_NAME,
+  aws: {
+    fileBucketName: env.AWS_BUCKET_NAME,
+    credentials: {
+      accessKeyId: env.AWS_ACCESS_KEY,
+      secretAccessKey: env.AWS_SECRET_KEY,
+    },
     region: env.AWS_BUCKET_REGION,
-    accessKeyId: env.AWS_ACCESS_KEY,
-    secretAccessKey: env.AWS_SECRET_KEY,
-  }
+    textBucketName: env.AWS_TEXT_BUCKET_NAME,
+  },
 });

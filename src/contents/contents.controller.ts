@@ -1,4 +1,4 @@
-import { Controller, Get, Post, UploadedFile, UseInterceptors, UsePipes } from '@nestjs/common';
+import { Controller, Get, Param, Post, UploadedFile, UseInterceptors, UsePipes } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ContentsService } from './contents.service';
 import { Content } from './entities/content.entity';
@@ -19,7 +19,12 @@ export class ContentsController {
   @Post('upload')
   @UsePipes(FileValidationPipe)
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@UploadedFile() file: FileType): Promise<Content> {
+  async uploadFile(@UploadedFile() file: FileType): Promise<string> {
     return this.contentsService.uploadFile(file);
+  }
+
+  @Get(':id')
+  async getText(@Param('id') filename: string): Promise<string> {
+    return this.contentsService.getTextByName(filename);
   }
 }

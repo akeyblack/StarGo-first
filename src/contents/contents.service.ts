@@ -1,15 +1,19 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Content } from './entities/content.entity';
 import { FilesService } from '../files/files.service';
 import { FileType } from '../types/file.type';
+import { Transcription } from './entities/transcription.entity';
+import { ContentStatus } from "src/types/content-status.enum";
 
 @Injectable()
 export class ContentsService {
   constructor(
     @InjectRepository(Content)
     private readonly contentsRepository: Repository<Content>,
+    @InjectRepository(Transcription)
+    private readonly transcriptionsRepository: Repository<Transcription>,
     private readonly filesService: FilesService,
   ) {}
 
@@ -18,27 +22,67 @@ export class ContentsService {
     return this.contentsRepository.find();
   }
   
-  async uploadFile(file: FileType): Promise<Content> {
+  async uploadFile(file: FileType): Promise<string> {
     const content = {
       filename: file.originalname,
       type: file.type,
-      subtype: file.subtype,
+      mimetype: file.mimetype,
       date: new Date(),
       size: file.size,
       extension: file.extension,
+      uri: "",
+      statusCode: ContentStatus.NOT_TRANSCRIBED,
+      transcription: {
+        text: "",
+        content: null,
+      },
     };
+    content.transcription.content = content;
+
+    const isExists = await this.contentsRepository.findOneBy({filename: content.filename});
+
+    if(isExists)
+      throw new BadRequestException("Filename already exists");
+
     const {id} = await this.contentsRepository.save(content);
 
     try {
-      await this.filesService.uploadFile(file as Express.Multer.File, id);
+      content.uri = await this.filesService.uploadFile(file as Express.Multer.File, id);
     } catch (err) {
-      await this.contentsRepository.delete({id});
-      throw new InternalServerErrorException();
+      await this.contentsRepository.delete({id}); 
+      throw err;
     }
+    
+    await this.contentsRepository.update({id}, {uri: content.uri})
 
-    return {id, ...content};
+    return id;
   }
-  
-}
 
-//todo date
+  async getTextByName(filename: string): Promise<string> {
+    const content = await this.contentsRepository.findOneBy({filename});
+    if(!content)
+      throw new NotFoundException(`Object with filename: ${filename} doesn't exist`);
+
+    switch(content.statusCode) {
+      case ContentStatus.TRANSCRIBED:
+        return content.transcription.text;
+        
+      case ContentStatus.NOT_TRANSCRIBED:
+        await this.contentsRepository.update({filename}, {statusCode: ContentStatus.IN_PROCESS})
+        try {
+          const text = await this.filesService.getText(content);
+          await this.transcriptionsRepository.update({id: content.transcription.id}, {text});
+          await this.contentsRepository.update({filename}, {statusCode: ContentStatus.TRANSCRIBED})
+          return text;
+        } catch (err) {
+          await this.contentsRepository.update({filename}, {statusCode: ContentStatus.NOT_TRANSCRIBED})
+        }
+
+      case ContentStatus.IN_PROCESS:
+        return "Transcription in process"
+
+      default:
+        throw new InternalServerErrorException();
+    }
+  }
+}
