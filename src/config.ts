@@ -5,7 +5,7 @@ const env = process.env;
 export const config = () => ({
   database: {
     type: 'mysql',
-    host: env.HOST ?? 'localhost',
+    host: env.DB_HOST ?? 'localhost',
     port: Number(env.DB_PORT) ?? 3306,
     username: env.DB_USERNAME ?? 'user',
     password: env.DB_PASSWORD ?? 'password',
@@ -25,7 +25,7 @@ export const config = () => ({
   },
   databaseTest: {
     type: 'mysql',
-    host: env.HOST ?? 'localhost',
+    host: env.DB_HOST ?? 'localhost',
     port: Number(env.TEST_DB_PORT) ?? 3307,
     username: env.TEST_DB_USERNAME ?? 'test',
     password: env.TEST_DB_PASSWORD ?? 'test',
