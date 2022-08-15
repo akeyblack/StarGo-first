@@ -44,7 +44,6 @@ export class FilesService {
     }
 
     const result = await this.s3.upload(params).promise();
-    pass.destroy();
     return result.Location;
   }
 
