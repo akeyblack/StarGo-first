@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { FilesService } from './files.service';
 import { ConfigService } from '@nestjs/config';
-import { readFile } from 'fs';
+import { close, readFile, readFileSync } from 'fs';
 import { BadRequestException } from '@nestjs/common';
 import { Content } from '../contents/entities/content.entity';
 
@@ -79,60 +79,46 @@ describe('FilesService', () => {
     service = module.get<FilesService>(FilesService);
   });
 
+
   it('should be defined', () => {
     expect(FilesService).toBeDefined();
   });
 
 
-  it('should check for corrupting, format and upload file to storage', done => {
-    readFile(filesPath+"test.mp3", async (err, data) => {
-      if(err)
-        throw err;
+  it('should check for corrupting, format and upload file to storage', async () => {
+    const data = readFileSync(filesPath+"test.mp3")
+    const file = {
+      buffer: data,
+      mimetype: 'audio/mpeg'
+    }
 
-      const file = {
-        buffer: data,
-        mimetype: 'audio/mpeg'
-      }
+    const result = service.uploadFile(file as Express.Multer.File, id);
 
-      const result = service.uploadFile(file as Express.Multer.File, id);
-
-      await expect(result).resolves.toEqual(fileUrl);
-      done();
-    })
+    expect(await result).toEqual(fileUrl);
   });
 
-  it('should check for corrupting and throw BadRequestException', done => {
-    readFile(filesPath+"fake.mp3", async (err, data) => {
-      if(err)
-        throw err;
+  it('should check for corrupting and throw BadRequestException', async () => {
+    const data = readFileSync(filesPath+"fake.mp3")
+    const file = {
+      buffer: data,
+      mimetype: 'audio/mpeg'
+    }
 
-      const file = {
-        buffer: data,
-        mimetype: 'audio/mpeg'
-      }
-
-      const result = service.uploadFile(file as Express.Multer.File, id);
-      
-      await expect(result).rejects.toThrow(BadRequestException);
-      done();
-    })
+    const result = service.uploadFile(file as Express.Multer.File, id);
+    
+    await expect(result).rejects.toThrow(BadRequestException);
   });
 
-  it('should check for corrupting, format and upload file to storage (video)', done => {
-    readFile(filesPath+"test.mp4", async (err, data) => {
-      if(err)
-        throw err;
+  it('should check for corrupting, format and upload file to storage (video)', async () => {
+    const data = readFileSync(filesPath+"test.mp4")
+    const file = {
+      buffer: data,
+      mimetype: 'video/mp4'
+    }
 
-      const file = {
-        buffer: data,
-        mimetype: 'video/mp4'
-      }
+    const result = service.uploadFile(file as Express.Multer.File, id);
 
-      const result = service.uploadFile(file as Express.Multer.File, id);
-
-      await expect(result).resolves.toEqual(fileUrl);
-      done();
-    })
+    expect(await result).toEqual(fileUrl);
   });
 
   it('should get text from file on storage by Content', async () => {
