@@ -26,10 +26,10 @@ export const config = () => ({
   databaseTest: {
     type: 'mysql',
     host: env.HOST ?? 'localhost',
-    port: 3307,
-    username: 'test',
-    password: 'test',
-    database: 'test',
+    port: Number(env.TEST_DB_PORT) ?? 3307,
+    username: env.TEST_DB_USERNAME ?? 'test',
+    password: env.TEST_DB_PASSWORD ?? 'test',
+    database: env.TEST_DB_NAME ?? 'test',
     synchronize: true,
     entities: [
       Content,
