@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+/*import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { ContentsModule } from '../src/contents/contents.module';
@@ -86,3 +86,4 @@ describe('ContentsController (e2e)', () => {
       .expect(400)
   });
 });
+*/
