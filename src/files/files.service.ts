@@ -59,7 +59,8 @@ export class FilesService {
       if(err.name === 'NotFound') {
         await this.transcribe(content);
         await this.s3.waitFor('objectExists', params).promise();
-      } else throw new InternalServerErrorException();
+      } else 
+        throw new InternalServerErrorException();
     }
 
     const response = this.s3.getObject(params);
@@ -88,6 +89,7 @@ export class FilesService {
       new StartTranscriptionJobCommand(params)
     );
   }
+
 
   private convertToWavPassThrough(buffer: Buffer): Promise<PassThrough> {
     return new Promise((resolve, reject) => {

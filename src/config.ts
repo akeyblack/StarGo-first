@@ -1,3 +1,5 @@
+import { Content } from './contents/entities/content.entity';
+import { Transcription } from './contents/entities/transcription.entity';
 const env = process.env;
 
 export const config = () => ({
@@ -21,4 +23,17 @@ export const config = () => ({
     region: env.AWS_BUCKET_REGION,
     textBucketName: env.AWS_TEXT_BUCKET_NAME,
   },
+  databaseTest: {
+    type: 'mysql',
+    host: env.HOST ?? 'localhost',
+    port: 3307,
+    username: 'test',
+    password: 'test',
+    database: 'test',
+    synchronize: true,
+    entities: [
+      Content,
+      Transcription,
+    ],
+  }
 });

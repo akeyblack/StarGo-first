@@ -5,7 +5,7 @@ import { Content } from './entities/content.entity';
 import { FilesService } from '../files/files.service';
 import { FileType } from '../types/file.type';
 import { Transcription } from './entities/transcription.entity';
-import { ContentStatus } from "src/types/content-status.enum";
+import { ContentStatus } from "../types/content-status.enum";
 
 @Injectable()
 export class ContentsService {
