@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { FilesService } from './files.service';
 import { ConfigService } from '@nestjs/config';
-import { close, readFile, readFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import { BadRequestException } from '@nestjs/common';
 import { Content } from '../contents/entities/content.entity';
 

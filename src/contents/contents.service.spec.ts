@@ -69,7 +69,7 @@ describe('ContentsService', () => {
   it('should upload two files with same names', async () => {
     expect(
       (await contentsService.uploadFile(mockFile)).length
-    ).toBe(36);
+    ).toMatch(mockFile.filename);
 
     expect(
       contentsService.uploadFile(mockFile)
@@ -87,7 +87,7 @@ describe('ContentsService', () => {
   it('should get transcription by filename', async () => {
     expect(
       (await contentsService.uploadFile(mockFile2)).length
-    ).toBe(36);
+    ).toMatch(mockFile2.filename);
 
     expect(
       (await contentsRepository.findOneBy({filename: mockFile2.originalname})).statusCode

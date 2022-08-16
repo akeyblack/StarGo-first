@@ -16,11 +16,6 @@ export class ContentsService {
     private readonly transcriptionsRepository: Repository<Transcription>,
     private readonly filesService: FilesService,
   ) {}
-
-
-  async getAll(): Promise<Content[]>{
-    return this.contentsRepository.find();
-  }
   
   async uploadFile(file: FileType): Promise<string> {
     const content = {
@@ -55,7 +50,7 @@ export class ContentsService {
     
     await this.contentsRepository.update({id}, {uri: content.uri})
 
-    return id;
+    return content.filename;
   }
 
   async getTextByName(filename: string): Promise<string> {

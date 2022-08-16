@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>API - Documentation</title>
+    <meta name="description" content="" />
+    <meta name="author" content="ticlekiwi" />
+
+    <meta http-equiv="cleartype" content="on" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;1,300&family=Source+Code+Pro:wght@300&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../index.css" media="all" />
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+  </head>
+
+  <body class="one-content-column-version">
+    <div class="left-menu">
+      <div class="content-logo">
+        <div class="logo">
+          <span>API Documentation</span>
+        </div>
+      </div>
+      <div class="mobile-menu-closer"></div>
+      <div class="content-menu">
+        <div class="content-infos">
+          <div class="info"><b>Version:</b> 1.0.0</div>
+          <div class="info"><b>Last Updated:</b> 16th Sep, 2022</div>
+        </div>
+        <ul>
+          <li class="scroll-to-link active" data-target="content-get-started">
+            <a>GET STARTED</a>
+          </li>
+          <li class="scroll-to-link" data-target="content-upload-media">
+            <a>Upload Media</a>
+          </li>
+          <li class="scroll-to-link" data-target="content-get-text">
+            <a>Get Transcription</a>
+          </li>
+          <li class="scroll-to-link" data-target="content-errors">
+            <a>Errors</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="content-page">
+      <div class="content">
+        <div class="overflow-hidden content-section" id="content-get-started">
+          <h1>Get started</h1>
+          <p>
+            This API provides programmatic access to speach recognition service
+          </p>
+          <p>
+            <strong>Supported formats</strong>: <br/>
+            aac, avi, flac, webm, mp4, mp2, mp3, mjpg, ogg <strong>and many others... Try yourself!</strong>
+          </p>
+        </div>
+        <div
+          class="overflow-hidden content-section"
+          id="content-upload-media"
+        >
+          <h2>upload media to server</h2>
+          <p>
+            To upload media you need to make a POST call WITH BODY object to the following url:<br />
+            <code class="higlighted break-word">https://stargo-first.herokuapp.com/contents/upload </code>
+          </p>
+          <br />
+          <h4>Body parameters</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>file</td>
+                <td>File</td>
+                <td>Your media file</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div
+          class="overflow-hidden content-section"
+          id="content-get-text"
+        >
+          <h2>get transcription of your uploaded media file</h2>
+          <p>
+            To get transcription of your file you need to make a GET call to the following url:<br />
+            <code class="higlighted break-word">https://stargo-first.herokuapp.com/contents/*your_file_name* </code>
+          </p>
+          <br />
+          <h4>Example</h4>
+          <p>
+            <code class="higlighted break-word">https://stargo-first.herokuapp.com/contents/itsmyspeach.mp3 </code>
+          </p>
+          <h4>Important </h4> <p>You must upload your file before it's transcription and filenames must be identical in both cal</p>
+        </div>
+        <div class="overflow-hidden content-section" id="content-errors">
+          <h2>Errors</h2>
+          <p>This API uses the following standart error statuses:</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Error Status</th>
+                <th>Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>400</td>
+                <td>
+                  Your file is corrupted or has unsupported format
+                </td>
+              </tr>
+              <tr>
+                <td>404</td>
+                <td>
+                  We can't find file with given filename
+                </td>
+              </tr>
+              <tr>
+                <td>50X</td>
+                <td>
+                  Sorry, looks like an error occurred on server side, try again later
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script src="./index.js"></script>
+  </body>
+</html>
