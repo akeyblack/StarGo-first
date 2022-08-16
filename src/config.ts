@@ -26,7 +26,7 @@ export const config = () => ({
   databaseTest: {
     type: 'mysql',
     host: env.DB_HOST ?? 'localhost',
-    port: Number(env.TEST_DB_PORT) ?? 3307,
+    port: 3307,
     username: env.TEST_DB_USERNAME ?? 'test',
     password: env.TEST_DB_PASSWORD ?? 'test',
     database: env.TEST_DB_NAME ?? 'test',

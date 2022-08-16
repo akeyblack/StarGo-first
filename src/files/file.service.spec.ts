@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { readFileSync } from 'fs';
 import { BadRequestException } from '@nestjs/common';
 import { Content } from '../contents/entities/content.entity';
+import { MailsService } from '../mails/mails.service';
 
 
 const filesPath=  "test/files/";
@@ -48,6 +49,9 @@ const filesPath=  "test/files/";
     }
   });
 
+  const mockMailsService = {
+    sendEmail: jest.fn().mockResolvedValue(true)
+  }
 
   jest.setTimeout(20000);
 
@@ -70,8 +74,11 @@ describe('FilesService', () => {
         {
           provide: ConfigService,
           useValue: mockConfigService,
+        },
+        {
+          provide: MailsService,
+          useValue: mockMailsService
         }
-          
       ],
     })
     .compile();

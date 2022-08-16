@@ -3,7 +3,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ContentsService } from './contents.service';
 import { FileValidationPipe } from '../pipes/file-validation.pipe';
 import { FileType } from '../types/file.type';
-import { prom } from 'src/utils/timeout-promise.utils';
+import { prom } from '../utils/timeout-promise.utils';
 
 @Controller('contents')
 export class ContentsController {
