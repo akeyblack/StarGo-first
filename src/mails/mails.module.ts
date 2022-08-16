@@ -13,7 +13,7 @@ import { ConfigService, ConfigModule } from '@nestjs/config';
       useFactory: async (configService: ConfigService) => ({
         transport: configService.get('mail').access,
         defaults: {
-          from: "Novohatskyi Vladyslav <akey8232@hotmail.com>"
+          from: configService.get('mail').from
         }
       })
     })

@@ -37,7 +37,7 @@ export const config = () => ({
     ],
   },
   mail: {
-    from: env.MAIL_FROM_NAME,
+    from: env.MAIL_FROM,
     access: {
       service: env.MAIL_SERVICE,
       auth: {
