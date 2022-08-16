@@ -35,5 +35,15 @@ export const config = () => ({
       Content,
       Transcription,
     ],
+  },
+  mail: {
+    from: env.MAIL_FROM_NAME,
+    access: {
+      service: env.MAIL_SERVICE,
+      auth: {
+        user: env.MAIL_USERNAME,
+        pass: env.MAIL_PASSWORD
+      }
+    }
   }
 });

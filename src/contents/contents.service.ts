@@ -53,7 +53,7 @@ export class ContentsService {
     return content.filename;
   }
 
-  async getTextByName(filename: string): Promise<string> {
+  async getTextByName(filename: string, email?: string): Promise<string> {
     const content = await this.contentsRepository.findOneBy({filename});
     if(!content)
       throw new NotFoundException(`Object with filename: ${filename} doesn't exist`);
@@ -65,8 +65,8 @@ export class ContentsService {
       case ContentStatus.NOT_TRANSCRIBED:
         await this.contentsRepository.update({filename}, {statusCode: ContentStatus.IN_PROCESS})
         try {
-          const text = await this.filesService.getText(content);
-          
+          const text = await this.filesService.getText(content, email);
+
           await this.transcriptionsRepository.update({id: content.transcription.id}, {text});
           await this.contentsRepository.update({filename}, {statusCode: ContentStatus.TRANSCRIBED})
           

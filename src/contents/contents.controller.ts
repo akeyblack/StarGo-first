@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, UploadedFile, UseInterceptors, UsePipes } from '@nestjs/common';
+import { Controller, Get, Param, Post, Query, UploadedFile, UseInterceptors, UsePipes } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ContentsService } from './contents.service';
 import { FileValidationPipe } from '../pipes/file-validation.pipe';
@@ -20,9 +20,9 @@ export class ContentsController {
   }
 
   @Get(':id')
-  async getText(@Param('id') filename: string): Promise<string> {
-    return Promise.race([
-      this.contentsService.getTextByName(filename),
+  async getText(@Param('id') filename: string, @Query('email') email: string): Promise<string> {                        
+    return Promise.race([                 
+      this.contentsService.getTextByName(filename, email),
       prom("Transcription in process")
     ]);
   }

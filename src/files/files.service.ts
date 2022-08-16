@@ -5,12 +5,14 @@ import { S3 } from "aws-sdk";
 import * as ffmpeg from "fluent-ffmpeg";
 import { Content } from "src/contents/entities/content.entity";
 import { PassThrough, Readable } from 'stream';
+import { MailsService } from '../mails/mails.service';
 
 
 @Injectable()
 export class FilesService {
   constructor(
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly mailsService: MailsService
   ) {
     const aws = this.configService.get('aws');
     this.fileBucketName = aws.fileBucketName;
@@ -48,7 +50,7 @@ export class FilesService {
   }
 
 
-  async getText(content: Content): Promise<string> {
+  async getText(content: Content, email?: string): Promise<string> {
     const params = {
       Bucket: this.textBucketName,
       Key: content.id + '.json'
@@ -60,6 +62,12 @@ export class FilesService {
       if(err.name === 'NotFound') {
         await this.transcribe(content);
         await this.s3.waitFor('objectExists', params).promise();
+        
+        try {
+          if(email)
+            await this.mailsService.sendEmail(email, content.filename)
+        } catch (err) {}
+
       } else 
         throw new InternalServerErrorException();
     }
@@ -79,7 +87,7 @@ export class FilesService {
     const params = {
       TranscriptionJobName: content.id,
       LanguageCode: 'en-US',
-      MediaFormat: 'wav',
+      MediaFormat: 'mp3',
       Media: {
         MediaFileUri: content.uri
       },
@@ -98,7 +106,7 @@ export class FilesService {
       const pass = new PassThrough();
 
       ffmpeg(stream)
-      .toFormat('wav')
+      .toFormat('mp3')
       .on('error', () => {
         reject(new BadRequestException('Wrong format/corrupted file'));
       })
