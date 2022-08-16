@@ -3,6 +3,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ContentsService } from './contents.service';
 import { FileValidationPipe } from '../pipes/file-validation.pipe';
 import { FileType } from '../types/file.type';
+import { prom } from 'src/utils/timeout-promise.utils';
 
 @Controller('contents')
 export class ContentsController {
@@ -20,6 +21,9 @@ export class ContentsController {
 
   @Get(':id')
   async getText(@Param('id') filename: string): Promise<string> {
-    return this.contentsService.getTextByName(filename);
+    return Promise.race([
+      this.contentsService.getTextByName(filename),
+      prom("Transcription in process")
+    ]);
   }
 }

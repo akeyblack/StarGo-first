@@ -66,8 +66,10 @@ export class ContentsService {
         await this.contentsRepository.update({filename}, {statusCode: ContentStatus.IN_PROCESS})
         try {
           const text = await this.filesService.getText(content);
+          
           await this.transcriptionsRepository.update({id: content.transcription.id}, {text});
           await this.contentsRepository.update({filename}, {statusCode: ContentStatus.TRANSCRIBED})
+          
           return text;
         } catch (err) {
           await this.contentsRepository.update({filename}, {statusCode: ContentStatus.NOT_TRANSCRIBED})
