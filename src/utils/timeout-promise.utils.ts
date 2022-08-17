@@ -1,5 +1,5 @@
-export function prom(message: string): Promise<string> {
+export function prom(smth: unknown, time?: number): Promise<unknown> {
   return new Promise(resolve => {
-    setTimeout(() => resolve(message), 10000);
+    setTimeout(() => resolve(smth), time ? time : 10000);
   })
 }

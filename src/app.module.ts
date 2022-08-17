@@ -6,6 +6,8 @@ import { config } from './config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FilesModule } from './files/files.module';
 import { ContentsModule } from './contents/contents.module';
+import { PlacesModule } from './places/places.module';
+import { ScraperModule } from './scraper/scraper.module';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { ContentsModule } from './contents/contents.module';
     }),
     FilesModule,
     ContentsModule,
+    PlacesModule,
+    ScraperModule,
   ],
   controllers: [AppController],
   providers: [AppService],

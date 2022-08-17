@@ -7,7 +7,8 @@ const env = process.env;
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  app.useStaticAssets(join(__dirname, '../static'))
-  await app.listen(env.PORT ?? 3000);
+  app.useStaticAssets(join(__dirname, '../static'));
+  const server = await app.listen(env.PORT ?? 3000);
+  server.setTimeout(1000000);
 }
 bootstrap();
