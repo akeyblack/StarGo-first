@@ -5,16 +5,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Place } from './entities/place.entity';
 import { Address } from './entities/address.entity';
 import { ScraperModule } from '../scraper/scraper.module';
+import { MailsModule } from '../mails/mails.module';
 
 @Module({
   providers: [PlacesService],
   controllers: [PlacesController],
   imports: [
     TypeOrmModule.forFeature([
-      Place,
       Address,
+      Place,
     ]),
-    ScraperModule
+    ScraperModule,
+    MailsModule
   ]
 })
 export class PlacesModule {}

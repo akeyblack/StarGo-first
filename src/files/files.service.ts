@@ -65,7 +65,10 @@ export class FilesService {
         
         try {
           if(email)
-            await this.mailsService.sendEmail(email, content.filename)
+            await this.mailsService.sendEmail(
+              email,
+              '<p>Click <a href="https://stargo-first.herokuapp.com/contents/' + content.filename + '">here</a> to get a transcription text</p>'
+            )
         } catch (err) {}
 
       } else 

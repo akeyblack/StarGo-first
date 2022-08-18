@@ -46,6 +46,9 @@
           <li class="scroll-to-link" data-target="content-get-text">
             <a>Get Transcription</a>
           </li>
+          <li class="scroll-to-link" data-target="content-get-places">
+            <a>Get Places</a>
+          </li>
           <li class="scroll-to-link" data-target="content-errors">
             <a>Errors</a>
           </li>
@@ -114,6 +117,25 @@
           <h4>Important </h4> <p>You must upload your file before it's transcription and filenames must be identical in both calls<br/>
             If transcription takes too long, service will send message "Transcription in process". Just wait and send call again.
 
+          </p>
+        </div>
+        <div
+          class="overflow-hidden content-section"
+          id="content-get-places"
+        >
+          <h2>get list of places from yelp.com by city</h2>
+          <p>
+            To get list you need to make a GET call to the following url:<br />
+            <code class="higlighted break-word">https://stargo-first.herokuapp.com/places/*city* </code>
+          </p>
+          <br />
+          <h4>Example</h4>
+          <p>
+            <code class="higlighted break-word">https://stargo-first.herokuapp.com/places/Chicago </code>
+          </p>
+          <h4>Also you can add email notifications by adding query "email". Example:</h4>
+          <p>
+            <code class="higlighted break-word">https://stargo-first.herokuapp.com/places/Chicago?email=myemail@gmail.com </code>
           </p>
         </div>
         <div class="overflow-hidden content-section" id="content-errors">

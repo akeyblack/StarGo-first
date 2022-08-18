@@ -4,36 +4,36 @@ import { Address } from './address.entity';
 @Entity()
 export class Place {
   @PrimaryGeneratedColumn('uuid')
-  id?: string;
+  id: string;
 
   @Column()
   name: string;
 
-  @Column()
+  @Column('text')
   description?: string;
 
   @Column('simple-array')
   amenities?: string[];
 
-  @Column()
+  @Column({default: ""})
   workingHour?: string;
 
-  @Column()
-  phone: string;
+  @Column({default: ""})
+  phone?: string;
 
   @Column('simple-array')
-  images: string[];
+  images?: string[];
 
-  @Column()
+  @Column({default: 0})
   rating?: number;
 
-  @Column()
+  @Column('text')
   lowestRated?: string;
 
-  @Column()
+  @Column('text')
   highestRated?: string;
 
-  @Column()
+  @Column({unique: true})
   url: string;
 
   @OneToOne(() => Address, address => address.place, {

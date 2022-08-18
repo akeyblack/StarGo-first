@@ -8,12 +8,12 @@ export class MailsService {
     private readonly mailerService: MailerService
   ) {}
 
-  async sendEmail(to: string, filename: string): Promise<boolean> {
+  async sendEmail(to: string, message: string): Promise<boolean> {
     return await this.mailerService
     .sendMail({
       to,
-      subject: `File "${filename}" transcripted`,
-      html: '<p>Click <a href="https://stargo-first.herokuapp.com/contents/' + filename + '">here</a> to get a transcription text</p>',
+      subject: `My app notification!`,
+      html: message,
     })
   }
 

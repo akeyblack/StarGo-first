@@ -1,5 +1,6 @@
 import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
+import { AxiosResponse } from "axios";
 import { load } from "cheerio";
 import { PlaceDto } from '../places/dto/place.dto';
 import { prom } from '../utils/timeout-promise.utils';
@@ -10,33 +11,12 @@ export class ScraperService {
     private readonly httpService: HttpService
   ) {}
 
-  private placesListUrl = (city: string, page: number) => `https://www.yelp.com/search?find_loc=${city}&start=${page*10}`;
+
+  placesListUrl = (city: string, page: number) => `https://www.yelp.com/search?find_loc=${city}&start=${page*10}`;
 
 
-  async getDataByCity(city: string): Promise<PlaceDto[]> {
-    const urlArray = (await Promise.all(
-      [0,1,2,3,4].map(i => this.getPlacesUrls(this.placesListUrl(city, i)))
-    )).flat(1);
-
-    console.log(urlArray)
-
-    const promises = urlArray.map((url, i) => {
-      try {
-        const result = this.getDataFromUrl(url, i*2000)
-        return result;
-      } catch (err) {}
-      return;
-    });
-    //const promises = [this.getDataFromUrl(urlArray[0])];
-    return (await Promise.allSettled(promises)).map(el => {
-      if(el.status==='rejected')
-        return;
-      return el.value;
-    });
-  }
-
-
-  private async getPlacesUrls(placesListUrl: string): Promise<{url: string, name: string}[]> {
+  async getPlacesUrls(placesListUrl: string, timeout: number): Promise<{url: string, name: string}[]> {
+    await prom(null, timeout);
     const response = await this.httpService.axiosRef.get(placesListUrl);
     const urlArray = [];
     const $ = load(response.data);
@@ -52,11 +32,16 @@ export class ScraperService {
   }
 
 
-  private async getDataFromUrl(data: {url: string, name: string}, timeout: number): Promise<PlaceDto> {
-    prom(null, timeout);
-    const response = await this.httpService.axiosRef.get(data.url);
-
-    const $ = load(response.data);
+  async getDataFromUrl(data: {url: string, name: string}, timeout: number): Promise<PlaceDto> {
+    await prom(null, timeout);
+    let response: AxiosResponse;
+    let $: cheerio.Root;
+    try {
+      response = await this.httpService.axiosRef.get(data.url);
+      $ = load(response.data);
+    } catch (err){
+      return this.getDataFromUrl(data, 2000);
+    }
 
     const description = $("[aria-label='About the Business']").find('span:not([style],[width])').contents().text().split('Read more')[0];
     
@@ -113,9 +98,16 @@ export class ScraperService {
   }
 
   private async getLowestRatedByUrl(url: string): Promise<string> {
-    const response = await this.httpService.axiosRef.get(url + "?sort_by=rating_asc");
+    await prom(null, 2000);
+    let response: AxiosResponse;
+    let $: cheerio.Root;
+    try {
+      response = await this.httpService.axiosRef.get(url + "?sort_by=rating_asc");
+      $ = load(response.data);
+    } catch {
+      return this.getLowestRatedByUrl(url);
+    }
 
-    const $ = load(response.data);
     const review = $('.review__09f24__oHr9V');
     let rated = "";
   

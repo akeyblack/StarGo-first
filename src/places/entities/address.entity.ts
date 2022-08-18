@@ -9,8 +9,8 @@ export class Address {
   @Column()
   city: string;
 
-  @Column()
-  street: string;
+  @Column({default: ""})
+  other: string;
 
   @OneToOne(() => Place, place => place.address)
   place: Place;
