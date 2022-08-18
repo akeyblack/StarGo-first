@@ -77,7 +77,7 @@ export class ScraperService {
 
     const stars = $('.i-stars__09f24__M1AR7').first();
     let rating = Number(
-      stars.attr()['aria-label'].split(' ')[0]
+      stars ? stars.attr()['aria-label'].split(' ')[0] : 0
     );
     if(!rating)
       rating = 0;
