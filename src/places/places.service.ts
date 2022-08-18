@@ -27,7 +27,7 @@ export class PlacesService {
 
     if(await this.addressesRespository.countBy({city: 'stop'}))
       return ScraperStatus.IN_PROCESS;
-    await this.addressesRespository.save({city: 'stop', other: ''});    // for preventing repeatable requests
+    await this.addressesRespository.save({city: 'stop', other: ''});    // to prevent repeatable requests
 
     const placesUrls = (await Promise.all(
       [0,1,2,3,4].map(i => 
@@ -36,7 +36,7 @@ export class PlacesService {
     )).flat(1);
 
     const promises = placesUrls.map((url, i) => {
-      return this.scraperService.getDataFromUrl(url, i*5000)
+      return this.scraperService.getDataFromUrl(url, i*6000)
     });
 
     const places = (await Promise.allSettled(promises))
