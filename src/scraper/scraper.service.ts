@@ -76,9 +76,11 @@ export class ScraperService {
     const lowestRated = await this.getLowestRatedByUrl(data.url);
 
     const stars = $('.i-stars__09f24__M1AR7').first();
-    const rating = Number(
-      stars ? stars.attr()['aria-label'].split(' ')[0]: 0
-    )
+    let rating = Number(
+      stars.attr()['aria-label'].split(' ')[0]
+    );
+    if(!rating)
+      rating = 0;
 
     const address = String($('.raw__09f24__T4Ezm').first().contents().text());
 

@@ -56,14 +56,16 @@ export class PlacesService {
     .filter(el => el);
 
     try {
-      await this.placesRepository.save(places);
       await this.addressesRespository.delete({city: 'stop'});
+      await this.placesRepository.save(places);
     } catch (err) {
+      console.log(err);
       if(email)
         await this.mailsService.sendEmail(
           email, 
           '<p>Something went wrong! Click <a href="https://stargo-first.herokuapp.com/places/' + city + '">here</a> to repeat request</p>'
         );
+        return ScraperStatus.COMPLETED;
     }
 
     try {
