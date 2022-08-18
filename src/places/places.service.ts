@@ -57,7 +57,7 @@ export class PlacesService {
 
     try {
       await this.placesRepository.save(places);
-      await this.addressesRespository.delete({other: 'test'});
+      await this.addressesRespository.delete({city: 'stop'});
     } catch (err) {
       if(email)
         await this.mailsService.sendEmail(
