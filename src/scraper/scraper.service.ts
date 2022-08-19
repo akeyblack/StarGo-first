@@ -17,6 +17,7 @@ export class ScraperService {
 
   async getPlacesUrls(placesListUrl: string, timeout: number): Promise<{url: string, name: string}[]> {
     await prom(null, timeout);
+
     const response = await this.httpService.axiosRef.get(placesListUrl);
     const urlArray = [];
     const $ = load(response.data);
@@ -35,12 +36,13 @@ export class ScraperService {
   async getDataFromUrl(data: {url: string, name: string}, timeout: number): Promise<PlaceDto> {
     await prom(null, timeout);
     let response: AxiosResponse;
+    console.log(data.url + "  " + timeout);
     let $: cheerio.Root;
     try {
       response = await this.httpService.axiosRef.get(data.url);
       $ = load(response.data);
     } catch (err){
-      return this.getDataFromUrl(data, 2000);
+      return this.getDataFromUrl(data, 3000);
     }
 
     const description = $("[aria-label='About the Business']").find('span:not([style],[width])').contents().text().split('Read more')[0];
@@ -54,7 +56,9 @@ export class ScraperService {
 
     const workingHours: string[] =  [];
     $('table.hours-table__09f24__KR8wh').find('.no-wrap__09f24__c3plq.css-1p9ibgf').each((i, el) => {
-      workingHours.push(el['children'][0].data);
+      workingHours.push(
+        el['children'][0].data
+      );
     });
 
     const phone = $('.css-na3oda:contains("Phone number")').next().contents().text().replace(/\s/g,'');
@@ -89,7 +93,7 @@ export class ScraperService {
       url: data.url,
       description,
       amenities,
-      workingHours: workingHours.join(),
+      workingHours,
       phone,
       images,
       lowestRated,
@@ -120,4 +124,5 @@ export class ScraperService {
     
     return rated;
   }
+
 }

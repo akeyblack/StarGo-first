@@ -49,6 +49,9 @@
           <li class="scroll-to-link" data-target="content-get-places">
             <a>Get Places</a>
           </li>
+          <li class="scroll-to-link" data-target="content-get-places-by-filter">
+            <a>Get uploaded places by filter</a>
+          </li>
           <li class="scroll-to-link" data-target="content-errors">
             <a>Errors</a>
           </li>
@@ -136,6 +139,31 @@
           <h4>Also you can add email notifications by adding "email" query. Example:</h4>
           <p>
             <code class="higlighted break-word">https://stargo-first.herokuapp.com/places/Chicago?email=myemail@gmail.com </code>
+          </p>
+        </div>
+        <div
+          class="overflow-hidden content-section"
+          id="content-get-places-by-filter"
+        >
+          <h2>get uploaded places by filter</h2>
+          <p>
+            To get places data you need to make a GET call to the following url with query:<br />
+            <code class="higlighted break-word">https://stargo-first.herokuapp.com/places?hour=Day.time&city=City&amenities=amenity1,amenity2</code>
+          </p>
+          <h4>Important </h4> <p>All queries are optional, amenities.length <=2</p>
+          <br />
+          <h4>Examples</h4>
+          <p>
+            <code class="higlighted break-word">https://stargo-first.herokuapp.com/places?hour=Monday.13&city=Detroit&amenities=Offers Takeout,Accepts Credit Cards</code>
+          </p>
+          <p>
+            <code class="higlighted break-word">https://stargo-first.herokuapp.com/places?hour=Monday.13</code>
+          </p>
+          <p>
+            <code class="higlighted break-word">https://stargo-first.herokuapp.com/places?city=Detroit&amenities=Offers Takeout</code>
+          </p>
+          <p>
+            <code class="higlighted break-word">https://stargo-first.herokuapp.com/places </code>
           </p>
         </div>
         <div class="overflow-hidden content-section" id="content-errors">

@@ -1,5 +1,6 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Address } from './address.entity';
+import { WorkingHour } from "./working-hour.entity";
 
 @Entity()
 export class Place {
@@ -12,11 +13,8 @@ export class Place {
   @Column('text')
   description?: string;
 
-  @Column('simple-array')
-  amenities?: string[];
-
-  @Column({default: ""})
-  workingHour?: string;
+  @Column()
+  amenities?: string;
 
   @Column({default: ""})
   phone?: string;
@@ -43,4 +41,11 @@ export class Place {
   })
   @JoinColumn()
   address: Address;
+
+  @OneToMany(() => WorkingHour, whours => whours.place, {
+    cascade: true,
+    onDelete: 'CASCADE',
+    eager: true,
+  })
+  workingHours: WorkingHour[];
 }

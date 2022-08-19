@@ -3,12 +3,18 @@ import { PlacesService } from './places.service';
 import { Place } from './entities/place.entity';
 import { prom } from '../utils/timeout-promise.utils';
 import { ScraperStatus } from '../types/scraper-status.enum';
+import { PlacesQuery, PlacesQueryType } from './places-query.decorator';
 
 @Controller('places')
 export class PlacesController {
   constructor(
     private readonly placesService: PlacesService,
   ) {}
+
+  @Get()
+  async getPlacesByQuery(@PlacesQuery() query: PlacesQueryType): Promise<Place[]> {
+    return this.placesService.getPlacesByCriterias(query.city, query.amenities, query.hour);
+  }
 
 
   @Get(':city')
@@ -32,4 +38,5 @@ export class PlacesController {
         return "Parsing started";
     }
   }
+
 }

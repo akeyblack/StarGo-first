@@ -2,7 +2,7 @@ export class PlaceDto {
   name: string;
   description?: string;
   amenities?: string[];
-  workingHours?: string;
+  workingHours?: string[];
   phone: string;
   images: string[];
   rating?: number;
