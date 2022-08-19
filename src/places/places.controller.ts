@@ -17,7 +17,7 @@ export class PlacesController {
   }
 
 
-  @Get(':city')
+  @Get('upload/:city')
   async getDataByCity(@Param('city') city: string, @Query('email') email?: string):Promise<Place[] | string> {
     const result = await Promise.race([
       this.placesService.saveDataByCity(city, email),

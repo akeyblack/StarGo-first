@@ -73,7 +73,7 @@ export class PlacesService {
       if(email)
         await this.mailsService.sendEmail(
           email, 
-          '<p>Something went wrong! Click <a href="https://stargo-first.herokuapp.com/places/' + city + '">here</a> to repeat request</p>'
+          '<p>Something went wrong! Click <a href="https://stargo-first.herokuapp.com/places/upload/' + city + '">here</a> to repeat request</p>'
         );
         return ScraperStatus.COMPLETED;
     }
@@ -82,7 +82,7 @@ export class PlacesService {
       if(email)
         await this.mailsService.sendEmail(
           email, 
-          '<p>Click <a href="https://stargo-first.herokuapp.com/places/' + city + '">here</a> to get your data text</p>'
+          '<p>Click <a href="https://stargo-first.herokuapp.com/places/upload/' + city + '">here</a> to get your data text</p>'
         );
     } catch (err) {}
 
