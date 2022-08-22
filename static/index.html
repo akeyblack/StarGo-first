@@ -64,10 +64,10 @@
         <div class="overflow-hidden content-section" id="content-get-started">
           <h1>Get started</h1>
           <p>
-            This API provides programmatic access to speach recognition service
+            This API provides programmatic access to speach recognition service and yelp.com parsing
           </p>
           <p>
-            <strong>Supported formats</strong>: <br/>
+            <strong>Supported formats for speach recognition</strong>: <br/>
             aac, avi, flac, webm, mp4, mp2, mp3, mjpg, ogg <strong>and many others... Try yourself!</strong>
           </p>
         </div>
@@ -148,16 +148,16 @@
           <h2>get uploaded places by filter</h2>
           <p>
             To get places data you need to make a GET call to the following url with query:<br />
-            <code class="higlighted break-word">https://stargo-first.herokuapp.com/places?hour=Day.time&city=City&amenities=amenity1,amenity2</code>
+            <code class="higlighted break-word">https://stargo-first.herokuapp.com/places?hour=Day_time&city=City&amenities=amenity1,amenity2</code>
           </p>
           <h4>Important </h4> <p>All queries are optional, amenities.length <=2</p>
           <br />
           <h4>Examples</h4>
           <p>
-            <code class="higlighted break-word">https://stargo-first.herokuapp.com/places?hour=Monday.13&city=Detroit&amenities=Offers Takeout,Accepts Credit Cards</code>
+            <code class="higlighted break-word">https://stargo-first.herokuapp.com/places?hour=Monday_13&city=Detroit&amenities=Offers Takeout,Accepts Credit Cards</code>
           </p>
           <p>
-            <code class="higlighted break-word">https://stargo-first.herokuapp.com/places?hour=Monday.13</code>
+            <code class="higlighted break-word">https://stargo-first.herokuapp.com/places?hour=Monday_13</code>
           </p>
           <p>
             <code class="higlighted break-word">https://stargo-first.herokuapp.com/places?city=Detroit&amenities=Offers Takeout</code>

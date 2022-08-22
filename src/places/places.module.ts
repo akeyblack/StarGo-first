@@ -17,6 +17,9 @@ import { MailsModule } from '../mails/mails.module';
     ]),
     ScraperModule,
     MailsModule
+  ],
+  exports: [
+    PlacesService,
   ]
 })
 export class PlacesModule {}

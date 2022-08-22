@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Place } from './entities/place.entity';
-import { LessThanOrEqual, MoreThanOrEqual, Raw, Repository } from 'typeorm';
+import { LessThanOrEqual, Like, MoreThanOrEqual, Raw, Repository } from 'typeorm';
 import { ScraperService } from '../scraper/scraper.service';
 import { MailsService } from '../mails/mails.service';
 import { Address } from './entities/address.entity';
@@ -133,6 +133,46 @@ export class PlacesService {
         }
       },
     });
+  }
+
+  async getPlacesByCityAndName(city: string, name: string): Promise<Place[]> {
+    return this.placesRepository.find({
+      relations: {
+        address: true
+      },
+      where: {
+        address: {
+          city
+        },
+        name: Like(`%${name}%`)
+      },
+    });
+  }
+
+  async isOpenedById(id: string, day: string, time: string): Promise<boolean> {
+    const prevDayId = Week[day]-1;
+    const prevDay =  Week[(prevDayId===-1) ? 6 : prevDayId];
+
+    return !!(await this.placesRepository.count({
+      relations: {
+        workingHours: true
+      },
+      where: {
+        workingHours: [{
+          start: LessThanOrEqual(this.addToTime(time, 0)),
+          end: MoreThanOrEqual(this.addToTime(time, 0)),
+          day: day
+        }, {
+          start: LessThanOrEqual(this.addToTime(time, 24)),
+          end: MoreThanOrEqual(this.addToTime(time, 24)),
+          day: prevDay
+        }]
+      }
+    }))
+  }
+
+  async getPlaceById(id: string): Promise<Place> {
+    return this.placesRepository.findOneBy({ id });
   }
 
   private async getPlacesUrlsByCity (city: string): Promise<string[]> {

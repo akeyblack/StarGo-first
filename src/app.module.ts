@@ -8,6 +8,8 @@ import { FilesModule } from './files/files.module';
 import { ContentsModule } from './contents/contents.module';
 import { PlacesModule } from './places/places.module';
 import { ScraperModule } from './scraper/scraper.module';
+import { TelegramModule } from './telegram/telegram.module';
+import { ReservationsModule } from './reservations/reservation.module';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import { ScraperModule } from './scraper/scraper.module';
     ContentsModule,
     PlacesModule,
     ScraperModule,
+    TelegramModule,
+    ReservationsModule
   ],
   controllers: [AppController],
   providers: [AppService],

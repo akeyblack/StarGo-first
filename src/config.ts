@@ -45,5 +45,6 @@ export const config = () => ({
         pass: env.MAIL_PASSWORD
       }
     }
-  }
+  },
+  telegram: env.TELEGRAM_TOKEN,
 });
