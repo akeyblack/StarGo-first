@@ -64,14 +64,14 @@ export class ReservationsService {
       await this.mailsService.sendEmail(
         reservation.email,
         `<p>Status of your ${reservation.place.name} reservation 
-            updated to ${ReservationStatus[reservation.status]}</p>`
+            updated to ${ReservationStatus[newStatus]}</p>`
       )
     } catch (err) {console.log(err)}
 
     try {
       await this.telegramService.sendMessage(
         reservation.telegramUser.chatId,
-        `Status of your ${reservation.place.name} reservation updated to ${ReservationStatus[reservation.status]}`
+        `Status of your ${reservation.place.name} reservation updated to ${ReservationStatus[newStatus]}`
       )
     } catch (err) {console.log(err)}
 

@@ -158,6 +158,7 @@ export class PlacesService {
         workingHours: true
       },
       where: {
+        id,
         workingHours: [{
           start: LessThanOrEqual(this.addToTime(time, 0)),
           end: MoreThanOrEqual(this.addToTime(time, 0)),
