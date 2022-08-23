@@ -6,7 +6,8 @@
 <pre>
 1. Speech to text conversion (audio+video). 
   a) Uploads file to aws s3, saves its metadata to db.
-  b) Finds file by name, converts it to text, sends email notification about finishing to the user. (AWS Transcribe).
+  b) Finds file by name, converts it to text, 
+     sends email notification about finishing to the user. (AWS Transcribe).
   c) Returns transcriptions.
 
 2. yelp.com parsing by city
@@ -27,6 +28,7 @@
   c) Returns data by optional filters (amenities, working hour, city).
 
 3. Reservation Telegram Bot
-  a) Bot that allows to "reserve" a table in already parsed place with time-to-working-hours validation etc.
+  a) Bot that allows to "reserve" a table in already parsed 
+     place with time-to-working-hours validation etc.
   b) API that allows to approve/deny reservation, get reservation "in process".
  </pre>
