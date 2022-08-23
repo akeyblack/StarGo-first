@@ -28,5 +28,7 @@
   b) Returns parsed data.
   c) Returns data by optional filters (amenities, working hour, city).
 
-3. Reservation Telegram Bot (in process)
+3. Reservation Telegram Bot
+  a) Bot that allows to "reserve" a table in already parsed place with time-to-working-hours validation etc.
+  b) API that allows to approve/deny reservation, get reservation "in process".
  </pre>
