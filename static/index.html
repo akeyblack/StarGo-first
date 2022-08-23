@@ -52,6 +52,9 @@
           <li class="scroll-to-link" data-target="content-get-places-by-filter">
             <a>Get uploaded places by filter</a>
           </li>
+          <li class="scroll-to-link" data-target="content-bot">
+            <a>Get and patch reservations</a>
+          </li>
           <li class="scroll-to-link" data-target="content-errors">
             <a>Errors</a>
           </li>
@@ -164,6 +167,20 @@
           </p>
           <p>
             <code class="higlighted break-word">https://stargo-first.herokuapp.com/places </code>
+          </p>
+        </div>
+        <div
+          class="overflow-hidden content-section"
+          id="content-bot"
+        >
+          <h2>Get and patch reservations</h2>
+          <p>
+            To get reservations in process you need to make a GET call to the following url:<br />
+            <code class="higlighted break-word">https://stargo-first.herokuapp.com/reservations</code>
+          </p>
+          <p>
+            To approve or deny reservations you need to make a PATCH call to the following url with body { approve: true/false }:<br />
+            <code class="higlighted break-word">https://stargo-first.herokuapp.com/reservations/*reservation_id*</code>
           </p>
         </div>
         <div class="overflow-hidden content-section" id="content-errors">

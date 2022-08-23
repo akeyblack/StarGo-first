@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, InternalServerErrorException, forwardRef, Inject } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from 'typeorm';
 import { Reservation } from './entities/reservation.entity';
@@ -15,6 +15,7 @@ export class ReservationsService {
     @InjectRepository(Reservation)
     private readonly reservationsRepository: Repository<Reservation>,
     private readonly mailsService: MailsService,
+    @Inject(forwardRef(() => TelegramService))
     private readonly telegramService: TelegramService,
     private readonly placesService: PlacesService,
   ) {}
@@ -36,7 +37,13 @@ export class ReservationsService {
   }
 
   async changeReservationStatus(id: string, to: boolean): Promise<string> {
-    const reservation = await this.reservationsRepository.findOneBy({ id });
+    const reservation = await this.reservationsRepository.findOne({
+      where: { id },
+      relations: { 
+        place: true,
+        telegramUser: true
+      } 
+    });
     const newStatus = to ? ReservationStatus.APPROVED : ReservationStatus.DENIED;
 
     if(!reservation)
@@ -59,7 +66,7 @@ export class ReservationsService {
         `<p>Status of your ${reservation.place.name} reservation 
             updated to ${ReservationStatus[reservation.status]}</p>`
       )
-    } catch {}
+    } catch (err) {console.log(err)}
 
     try {
       await this.telegramService.sendMessage(
@@ -67,7 +74,7 @@ export class ReservationsService {
         `<p>Status of your ${reservation.place.name} reservation 
             updated to ${ReservationStatus[reservation.status]}</p>`
       )
-    } catch {}
+    } catch (err) {console.log(err)}
 
     return ReservationStatus[newStatus];
   }

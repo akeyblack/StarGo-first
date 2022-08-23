@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from '@nestjs/common';
 import { TelegrafModule } from "nestjs-telegraf";
 import { ConfigService, ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -8,6 +8,7 @@ import { TelegramUpdate } from "./telegram.update";
 import { MakeReservationScene } from "./scenes/make-reservation.scene";
 import { PlacesModule } from '../places/places.module';
 import { session } from "telegraf";
+import { ReservationsModule } from '../reservations/reservation.module';
 
 @Module({
   providers: [
@@ -28,6 +29,7 @@ import { session } from "telegraf";
       }),
     }),
     PlacesModule,
+    forwardRef(() => ReservationsModule),
   ],
   exports: [
     TelegramService,

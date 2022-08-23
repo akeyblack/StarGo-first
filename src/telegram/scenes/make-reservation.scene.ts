@@ -2,16 +2,19 @@ import { Action, Command, Context, On, Wizard, WizardStep } from "nestjs-telegra
 import { Scenes } from "telegraf";
 import { PlacesService } from '../../places/places.service';
 import { Week } from '../../types/week.enum';
+import { TelegramService } from '../telegram.service';
+import { TelegramState } from '../../types/telegram-state.type';
 
 @Wizard('makeReservation')
 export class MakeReservationScene {
   constructor(
     private readonly placesService: PlacesService,
+    private readonly telegramService: TelegramService,
   ) {
     this.state = {
       city: '',
       name: '',
-      id: '',
+      placeId: '',
       day: '',
       time: '',
       email: '',
@@ -19,15 +22,7 @@ export class MakeReservationScene {
     }
   }
 
-  private state: {
-    city: string,
-    name: string,
-    id: string,
-    day: string,
-    time: string,
-    email: string,
-    guests: number,
-  }
+  private state: TelegramState;
 
   @Command('reset')
   async reset(@Context() ctx: Scenes.WizardContext) {
@@ -79,7 +74,7 @@ export class MakeReservationScene {
   @Action(/action:.+/)
   @WizardStep(4)
   async step4(@Context() ctx: Scenes.WizardContext) {
-    this.state.id = ctx.callbackQuery.data.split(':')[1];
+    this.state.placeId = ctx.callbackQuery.data.split(':')[1];
     ctx.answerCbQuery();
 
     const inlineKeyboard = ["Today", "Tomorrow", "Day after tomorrow"].map((el, i) => {
@@ -110,7 +105,7 @@ export class MakeReservationScene {
   @WizardStep(6)
   async step6(@Context() ctx: Scenes.WizardContext) {
     const text = ctx.message['text'];
-    if(!(await this.placesService.isOpenedById(this.state.id, this.state.day, text)))  {
+    if(!(await this.placesService.isOpenedById(this.state.placeId, this.state.day, text)))  {
       ctx.reply("Place is closed in that time, enter another");
       ctx.wizard.selectStep(5);
       return;
@@ -158,10 +153,12 @@ export class MakeReservationScene {
     const [, result] = ctx.callbackQuery.data.split(':');
     ctx.answerCbQuery();
 
-    if(result==='true')
-      ctx.reply('Done! Enter /make for new reservation')
+    if(result==='true') {
+      ctx.reply('Done! Enter /make for new reservation');
+      await this.telegramService.makeReservation(this.state, ctx.chat.id);
+    }
     else
-      ctx.reply('Enter /make for new reservation')
+      ctx.reply('Enter /make for new reservation');
 
     ctx.scene.leave();
   }
