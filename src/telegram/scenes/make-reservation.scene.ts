@@ -76,9 +76,12 @@ export class MakeReservationScene {
   async step4(@Context() ctx: Scenes.WizardContext) {
     this.state.placeId = ctx.callbackQuery.data.split(':')[1];
     ctx.answerCbQuery();
+    
+    const today = new Date().getDay();
+    const covertedTodat = (today===0) ? 6: today-1;
 
     const inlineKeyboard = ["Today", "Tomorrow", "Day after tomorrow"].map((el, i) => {
-      return [{ text: el, callback_data: `action:${new Date().getDay()+i}` }]
+      return [{ text: el, callback_data: `action:${covertedTodat-1}` }]
     });
 
     ctx.reply('Pick a day', {
@@ -155,7 +158,11 @@ export class MakeReservationScene {
 
     if(result==='true') {
       ctx.reply('Done! Enter /make for new reservation');
-      await this.telegramService.makeReservation(this.state, ctx.chat.id);
+      try {
+        await this.telegramService.makeReservation(this.state, ctx.chat.id);
+      } catch (err) {
+        ctx.reply(String(err));
+      }
     }
     else
       ctx.reply('Enter /make for new reservation');
