@@ -71,8 +71,7 @@ export class ReservationsService {
     try {
       await this.telegramService.sendMessage(
         reservation.telegramUser.chatId,
-        `<p>Status of your ${reservation.place.name} reservation 
-            updated to ${ReservationStatus[reservation.status]}</p>`
+        `Status of your ${reservation.place.name} reservation updated to ${ReservationStatus[reservation.status]}`
       )
     } catch (err) {console.log(err)}
 

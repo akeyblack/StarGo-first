@@ -1,5 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Reservation } from '../../reservations/entities/reservation.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity() 
 export class TelegramUser {
@@ -11,11 +10,4 @@ export class TelegramUser {
 
   @Column()
   chatId: number;
-
-  @OneToMany(() => Reservation, reservations => reservations.telegramUser, {
-    cascade: true,
-    onDelete: 'CASCADE',
-    eager: true,
-  })
-  reservations: Reservation[];
 }

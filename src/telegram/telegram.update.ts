@@ -13,6 +13,7 @@ export class TelegramUpdate {
   async start (@Ctx() ctx: Context) {
     try {
       await this.telegramService.createTelegramUser(ctx.chat.id, ctx.message.from.username);
+      ctx.reply('Welcome! Use /make for make reservation');
     } catch {
       ctx.reply('Error occurs! Try to reload the bot');
     }

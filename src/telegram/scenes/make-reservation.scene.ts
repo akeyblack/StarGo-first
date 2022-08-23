@@ -78,10 +78,10 @@ export class MakeReservationScene {
     ctx.answerCbQuery();
     
     const today = new Date().getDay();
-    const covertedTodat = (today===0) ? 6: today-1;
+    const covertedToday = (today===0) ? 6: today-1;
 
     const inlineKeyboard = ["Today", "Tomorrow", "Day after tomorrow"].map((el, i) => {
-      return [{ text: el, callback_data: `action:${covertedTodat-1}` }]
+      return [{ text: el, callback_data: `action:${covertedToday+i}` }]
     });
 
     ctx.reply('Pick a day', {
@@ -107,7 +107,14 @@ export class MakeReservationScene {
   @On('text')
   @WizardStep(6)
   async step6(@Context() ctx: Scenes.WizardContext) {
-    const text = ctx.message['text'];
+    const text: string = ctx.message['text'];
+    if(text.split(':').length !== 2) {
+      ctx.reply("Wrong format! Enter again")
+      ctx.wizard.selectStep(5);
+      return;
+    }
+
+    
     if(!(await this.placesService.isOpenedById(this.state.placeId, this.state.day, text)))  {
       ctx.reply("Place is closed in that time, enter another");
       ctx.wizard.selectStep(5);
@@ -124,8 +131,14 @@ export class MakeReservationScene {
   @On('text')
   @WizardStep(7)
   async step7(@Context() ctx: Scenes.WizardContext) {
-    this.state.guests = Number(ctx.message['text'])
+    const guests = Number(ctx.message['text'])
+    if(!guests) {
+      ctx.reply("Enter a number!");
+      ctx.wizard.selectStep(6);
+      return;
+    }
 
+    this.state.guests = guests;
     ctx.reply('Enter your email for notification (optional)')
 
     ctx.wizard.next();

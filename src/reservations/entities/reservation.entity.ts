@@ -8,7 +8,7 @@ export class Reservation {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => Place)
+  @ManyToOne(() => Place)
   @JoinColumn()
   place: Place;
 
@@ -27,6 +27,7 @@ export class Reservation {
   @Column()
   email: string;
 
-  @ManyToOne(() => TelegramUser, user => user.reservations)
+  @ManyToOne(() => TelegramUser)
+  @JoinColumn()
   telegramUser: TelegramUser;
 }
