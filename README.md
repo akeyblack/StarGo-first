@@ -1,5 +1,3 @@
-) 
-
 # API documentation: [*click*](https://stargo-first.herokuapp.com/)
 
 <pre> Uses Nest.js, TypeORM MySql, AWS S3, AWS Transcribe </pre>
