@@ -21,9 +21,14 @@ export class ContentsController {
 
   @Get(':id')
   async getText(@Param('id') filename: string, @Query('email') email: string): Promise<string> {                        
-    return Promise.race([                 
+    const result = await Promise.race([                 
       this.contentsService.getTextByName(filename, email),
-      String(prom("Transcription in process"))
+      prom(null, 5000)
     ]);
+
+    if (result)
+      return String(result);
+    
+    return "Transcription in process";
   }
 }
