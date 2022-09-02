@@ -15,13 +15,16 @@ export const config = () => ({
     entities: ['dist/**/entities/*.entity.js'],
   },
   aws: {
-    fileBucketName: env.AWS_BUCKET_NAME,
     credentials: {
       accessKeyId: env.AWS_ACCESS_KEY,
       secretAccessKey: env.AWS_SECRET_KEY,
     },
     region: env.AWS_BUCKET_REGION,
+  },
+  awsBuckets: {
+    fileBucketName: env.AWS_BUCKET_NAME,
     textBucketName: env.AWS_TEXT_BUCKET_NAME,
+    eventImgsBucketName: env.AWS_EVENT_IMGS_BUCKET_NAME,
   },
   databaseTest: {
     type: 'mysql',
@@ -47,4 +50,10 @@ export const config = () => ({
     }
   },
   telegram: env.TELEGRAM_TOKEN,
+  twitter: {
+    appKey: env.TWITTER_APP_KEY,
+    appSecret: env.TWITTER_APP_SECRET,
+    accessToken: env.TWITTER_ACCESS_TOKEN,
+    accessSecret: env.TWITTER_ACCESS_SECRET,
+  }
 });

@@ -6,6 +6,7 @@ import * as ffmpeg from "fluent-ffmpeg";
 import { Content } from "src/contents/entities/content.entity";
 import { PassThrough, Readable } from 'stream';
 import { MailsService } from '../mails/mails.service';
+import { Bucket } from '../types/aws-bucket.enum';
 
 
 @Injectable()
@@ -15,8 +16,6 @@ export class FilesService {
     private readonly mailsService: MailsService
   ) {
     const aws = this.configService.get('aws');
-    this.fileBucketName = aws.fileBucketName;
-    this.textBucketName = aws.textBucketName;
 
     this.s3 = new S3({
       ...aws.credentials,
@@ -29,17 +28,15 @@ export class FilesService {
     });
   }
 
-  private fileBucketName: string;
-  private textBucketName: string;
   private s3: S3;
   private transcribeClient: TranscribeClient;
 
 
-  async uploadFile(file: Express.Multer.File, key: string): Promise<string> {
+  async uploadFile(file: Express.Multer.File, key: string, bucketName: string): Promise<string> {
     const pass = await this.convertToWavPassThrough(file.buffer);
   
     const params = {
-      Bucket: this.fileBucketName,
+      Bucket: bucketName,
       Key: key,
       Body: pass,
       ContentType: file.mimetype,
@@ -52,7 +49,7 @@ export class FilesService {
 
   async getText(content: Content, email?: string): Promise<string> {
     const params = {
-      Bucket: this.textBucketName,
+      Bucket: this.configService.get('aws').textBucketName,
       Key: content.id + '.json'
     }
 
@@ -85,6 +82,13 @@ export class FilesService {
         str += el.transcript + "\n", "");
   }
 
+  async getUrl(bucketName: string, name: string): Promise<string> {
+    const params = {
+      Bucket: bucketName,
+      Key: name,
+    }
+    return this.s3.getSignedUrlPromise('getObject', params);
+  }
 
   private async transcribe(content: Content): Promise<void> {
     const params = {
@@ -94,14 +98,13 @@ export class FilesService {
       Media: {
         MediaFileUri: content.uri
       },
-      OutputBucketName: this.textBucketName,
+      OutputBucketName: Bucket.CONTENT_TEXT,
     }
 
     await this.transcribeClient.send(
       new StartTranscriptionJobCommand(params)
     );
   }
-
 
   private convertToWavPassThrough(buffer: Buffer): Promise<PassThrough> {
     return new Promise((resolve, reject) => {

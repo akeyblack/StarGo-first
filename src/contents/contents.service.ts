@@ -6,6 +6,7 @@ import { FilesService } from '../files/files.service';
 import { FileType } from '../types/file.type';
 import { Transcription } from './entities/transcription.entity';
 import { ContentStatus } from "../types/content-status.enum";
+import { Bucket } from '../types/aws-bucket.enum';
 
 @Injectable()
 export class ContentsService {
@@ -42,7 +43,7 @@ export class ContentsService {
     const {id} = await this.contentsRepository.save(content);
 
     try {
-      content.uri = await this.filesService.uploadFile(file as Express.Multer.File, id);
+      content.uri = await this.filesService.uploadFile(file as Express.Multer.File, id, Bucket.CONTENT_FILE);
     } catch (err) {
       await this.contentsRepository.delete({id}); 
       throw err;

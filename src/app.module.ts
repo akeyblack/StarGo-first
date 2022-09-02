@@ -10,6 +10,8 @@ import { PlacesModule } from './places/places.module';
 import { ScraperModule } from './scraper/scraper.module';
 import { TelegramModule } from './telegram/telegram.module';
 import { ReservationsModule } from './reservations/reservation.module';
+import { TwitterModule } from './twitter/twitter.module';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -28,7 +30,9 @@ import { ReservationsModule } from './reservations/reservation.module';
     PlacesModule,
     ScraperModule,
     TelegramModule,
-    ReservationsModule
+    ReservationsModule,
+    EventsModule,
+    TwitterModule,
   ],
   controllers: [AppController],
   providers: [AppService],
