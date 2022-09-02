@@ -1,4 +1,5 @@
 # API documentation: [*click*](https://stargo-first.herokuapp.com/)
+# Telegram Bot: [*click*](https://t.me/StarGoReservationsBot)
 
 <pre> Uses Nest.js, TypeORM MySql, AWS S3, AWS Transcribe </pre>
 
