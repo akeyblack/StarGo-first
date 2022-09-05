@@ -5,6 +5,7 @@ import { readFileSync } from 'fs';
 import { BadRequestException } from '@nestjs/common';
 import { Content } from '../contents/entities/content.entity';
 import { MailsService } from '../mails/mails.service';
+import { Bucket } from '../types/aws-bucket.enum';
 
 
 const filesPath=  "test/files/";
@@ -99,7 +100,7 @@ describe('FilesService', () => {
       mimetype: 'audio/mpeg'
     }
 
-    const result = service.uploadFile(file as Express.Multer.File, id);
+    const result = service.uploadFile(file as Express.Multer.File, id, Bucket.get().CONTENT_FILE);
 
     expect(await result).toEqual(fileUrl);
   });
@@ -111,7 +112,7 @@ describe('FilesService', () => {
       mimetype: 'audio/mpeg'
     }
 
-    const result = service.uploadFile(file as Express.Multer.File, id);
+    const result = service.uploadFile(file as Express.Multer.File, id, Bucket.get().CONTENT_FILE);
     
     await expect(result).rejects.toThrow(BadRequestException);
   });
@@ -123,7 +124,7 @@ describe('FilesService', () => {
       mimetype: 'video/mp4'
     }
 
-    const result = service.uploadFile(file as Express.Multer.File, id);
+    const result = service.uploadFile(file as Express.Multer.File, id, Bucket.get().CONTENT_FILE);
 
     expect(await result).toEqual(fileUrl);
   });

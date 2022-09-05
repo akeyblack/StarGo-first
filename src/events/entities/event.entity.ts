@@ -1,8 +1,9 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Place } from '../../places/entities/place.entity';
 
 @Entity()
 export class PlaceEvent {
-  @PrimaryColumn('uuid')
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column('time')
@@ -23,6 +24,9 @@ export class PlaceEvent {
   @Column('simple-array')
   features: string[];
   
-  @Column('simple-array')
-  guests: string[];
+  @Column('int')
+  guests: number;
+
+  @ManyToOne(() => Place)
+  place: Place;
 }

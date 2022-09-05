@@ -43,7 +43,7 @@ export class ContentsService {
     const {id} = await this.contentsRepository.save(content);
 
     try {
-      content.uri = await this.filesService.uploadFile(file as Express.Multer.File, id, Bucket.CONTENT_FILE);
+      content.uri = await this.filesService.uploadAndConvertToMp3File(file as Express.Multer.File, id, Bucket.get().CONTENT_FILE);
     } catch (err) {
       await this.contentsRepository.delete({id}); 
       throw err;

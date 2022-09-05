@@ -1,4 +1,4 @@
-import { IsArray, IsISO8601 } from "class-validator";
+import { IsArray, IsISO8601, IsUUID } from "class-validator";
 
 export class CreateEventDto {
   start: string;
@@ -11,4 +11,7 @@ export class CreateEventDto {
 
   @IsArray()
   features: string[];
+
+  @IsUUID()
+  placeId: string;
 }

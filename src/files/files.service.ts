@@ -31,8 +31,19 @@ export class FilesService {
   private s3: S3;
   private transcribeClient: TranscribeClient;
 
+  async uploadFile(file: Express.Multer.File, key: string, bucketName: string): Promise<string> {  
+    const params = {
+      Bucket: bucketName,
+      Key: key,
+      Body: file.buffer,
+      ContentType: file.mimetype,
+    }
 
-  async uploadFile(file: Express.Multer.File, key: string, bucketName: string): Promise<string> {
+    const result = await this.s3.upload(params).promise();
+    return result.Location;
+  }
+
+  async uploadAndConvertToMp3File(file: Express.Multer.File, key: string, bucketName: string): Promise<string> {
     const pass = await this.convertToWavPassThrough(file.buffer);
   
     const params = {
@@ -82,10 +93,11 @@ export class FilesService {
         str += el.transcript + "\n", "");
   }
 
-  async getUrl(bucketName: string, name: string): Promise<string> {
+  async getUrl(bucketName: string, name: string, expires: number): Promise<string> {
     const params = {
       Bucket: bucketName,
       Key: name,
+      Expires: expires
     }
     return this.s3.getSignedUrlPromise('getObject', params);
   }
@@ -98,7 +110,7 @@ export class FilesService {
       Media: {
         MediaFileUri: content.uri
       },
-      OutputBucketName: Bucket.CONTENT_TEXT,
+      OutputBucketName: Bucket.get().CONTENT_TEXT,
     }
 
     await this.transcribeClient.send(

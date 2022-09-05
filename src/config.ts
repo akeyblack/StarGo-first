@@ -14,6 +14,7 @@ export const config = () => ({
     logging: false,
     entities: ['dist/**/entities/*.entity.js'],
   },
+  url: env.URL,
   aws: {
     credentials: {
       accessKeyId: env.AWS_ACCESS_KEY,

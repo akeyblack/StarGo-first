@@ -5,6 +5,7 @@ import { TwitterModule } from '../twitter/twitter.module';
 import { FilesModule } from '../files/files.module';
 import { PlaceEvent } from './entities/event.entity';
 import { EventsController } from './events.contoller';
+import { PlacesModule } from '../places/places.module';
 
 @Module({
   providers: [
@@ -19,6 +20,7 @@ import { EventsController } from './events.contoller';
     ]),
     TwitterModule,
     FilesModule,
+    PlacesModule,
   ],
   exports: [
     EventsService,

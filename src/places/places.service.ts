@@ -6,8 +6,9 @@ import { ScraperService } from '../scraper/scraper.service';
 import { MailsService } from '../mails/mails.service';
 import { Address } from './entities/address.entity';
 import { ScraperStatus } from '../types/scraper-status.enum';
-import * as moment from "moment";
+import moment from "moment";
 import { Week } from '../types/week.enum';
+import { addToTime } from '../utils/time.utils';
 
 @Injectable()
 export class PlacesService {
@@ -100,12 +101,12 @@ export class PlacesService {
       const prevDay =  Week[(prevDayId===-1) ? 6 : prevDayId];
 
       whereObj['workingHours'] = [{
-        start: LessThanOrEqual(this.addToTime(hour.time, 0)),
-        end: MoreThanOrEqual(this.addToTime(hour.time, 0)),
+        start: LessThanOrEqual(addToTime(hour.time, 0)),
+        end: MoreThanOrEqual(addToTime(hour.time, 0)),
         day: hour.day
       }, {
-        start: LessThanOrEqual(this.addToTime(hour.time, 24)),
-        end: MoreThanOrEqual(this.addToTime(hour.time, 24)),
+        start: LessThanOrEqual(addToTime(hour.time, 24)),
+        end: MoreThanOrEqual(addToTime(hour.time, 24)),
         day: prevDay
       }]
     }
@@ -160,12 +161,12 @@ export class PlacesService {
       where: {
         id,
         workingHours: [{
-          start: LessThanOrEqual(this.addToTime(time, 0)),
-          end: MoreThanOrEqual(this.addToTime(time, 0)),
+          start: LessThanOrEqual(addToTime(time, 0)),
+          end: MoreThanOrEqual(addToTime(time, 0)),
           day: day
         }, {
-          start: LessThanOrEqual(this.addToTime(time, 24)),
-          end: MoreThanOrEqual(this.addToTime(time, 24)),
+          start: LessThanOrEqual(addToTime(time, 24)),
+          end: MoreThanOrEqual(addToTime(time, 24)),
           day: prevDay
         }]
       }
@@ -173,7 +174,13 @@ export class PlacesService {
   }
 
   async getPlaceById(id: string): Promise<Place> {
-    return this.placesRepository.findOneBy({ id });
+    return this.placesRepository.findOne({
+      where: { id },
+      relations: {
+        address: true,
+        workingHours: true
+      }
+     });
   }
 
   private async getPlacesUrlsByCity (city: string): Promise<string[]> {
@@ -221,12 +228,5 @@ export class PlacesService {
       start: t1,
       end: t2
     }    
-  }
-
-  private addToTime(time: string, n: number): string {
-    const dur = moment.duration(time, 'hours').add(n, 'hours');
-    const hours = Math.floor(dur.asHours());
-    const mins  = Math.floor(dur.asMinutes()) - hours * 60;
-    return hours + ':' + ((mins>9) ? mins : '0' + mins);
   }
 }
