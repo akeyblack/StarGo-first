@@ -5,26 +5,22 @@ import {
   Injectable,
   PipeTransform,
 } from '@nestjs/common';
+import * as moment from 'moment';
 
 @Injectable()
-export class ImgValidationPipe implements PipeTransform<any> {
+export class IntervalValidationPipe implements PipeTransform<any> {
   async transform(value: any, metadata: ArgumentMetadata) {
 
-    const file: Express.Multer.File = plainToClass(metadata.metatype, value);
+    const obj: {start: string, end: string} = plainToClass(metadata.metatype, value);
+    if(!obj.start || !obj.end)
+      return value;
 
-    if(!(file && file.mimetype && file.size))
-      throw new BadRequestException("Bad format");
-
-    if(file.originalname.length > 300) {
-      throw new BadRequestException("Filename length must be up to 300");
-    }
-
-    if(file.size > 5*1024*1024)
-      throw new BadRequestException("Imgs must be up to 5mb in size");
-
-    if(file.mimetype.split('/')[0] !== 'image')
-      throw new BadRequestException("Wrong format, must be an image");
-
+    if(!moment(obj.start,"HH:mm", true).isValid() || !moment(obj.end,"HH:mm", true).isValid() )
+      throw new BadRequestException("Bad time format");
+    
+    if(moment(obj.start,"HH:mm").diff(moment(obj.end,"HH:mm")) >= 0)
+      throw new BadRequestException("Start > End");
+   
     return value;
   }
 }

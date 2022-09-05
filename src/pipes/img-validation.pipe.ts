@@ -14,6 +14,9 @@ export class ImgValidationPipe implements PipeTransform<any> {
 
     const file: Express.Multer.File = plainToClass(metadata.metatype, value);
 
+    if(!file)
+      throw new BadRequestException("Image is a must");
+
     if(!(file && file.mimetype && file.size))
       throw new BadRequestException("Bad image format");
 

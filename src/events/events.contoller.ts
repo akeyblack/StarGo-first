@@ -3,6 +3,7 @@ import { CreateEventDto } from './dto/create-event.dto';
 import { ImgValidationPipe } from '../pipes/img-validation.pipe';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { EventsService } from './events.service';
+import { IntervalValidationPipe } from '../pipes/time-validation.pipe';
 
 @Controller('events')
 export class EventsController {
@@ -12,7 +13,7 @@ export class EventsController {
 
 
   @Post()
-  @UsePipes(ImgValidationPipe, ValidationPipe)
+  @UsePipes(ValidationPipe, ImgValidationPipe, IntervalValidationPipe)
   @UseInterceptors(FileInterceptor('file'))
   async createEvent(@Body() createEventDto: CreateEventDto, @UploadedFile() file: Express.Multer.File): Promise<string> {
     return this.eventsService.createEvent(createEventDto, file);

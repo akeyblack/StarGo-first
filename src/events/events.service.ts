@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, MoreThanOrEqual, LessThanOrEqual, MoreThan } from 'typeorm';
+import { Repository, MoreThanOrEqual, MoreThan, LessThan } from 'typeorm';
 import { TwitterService } from '../twitter/twitter.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { PlaceEvent } from './entities/event.entity';
@@ -8,6 +8,7 @@ import { FilesService } from '../files/files.service';
 import { Bucket } from '../types/aws-bucket.enum';
 import { PlacesService } from '../places/places.service';
 import { ConfigService } from '@nestjs/config';
+import * as moment from 'moment';
 
 @Injectable()
 export class EventsService {
@@ -21,23 +22,28 @@ export class EventsService {
   ) {}
 
   async createEvent(createEventDto: CreateEventDto, img: Express.Multer.File): Promise<string> {
+    if (moment(
+      createEventDto.date + ' ' + createEventDto.start, "YYYY-MM-DD HH:mm"
+    ).diff(moment(Date.now())) < 0 )
+      throw new BadRequestException("Your event's start time passed");
+      
     const isExists = await this.eventsRepository.count({
       where: [{
         date: createEventDto.date,
-        start: LessThanOrEqual(createEventDto.start),
-        end: LessThanOrEqual(createEventDto.end)
+        start: MoreThan(createEventDto.start),
+        end: LessThan(createEventDto.end)
       }, {
         date: createEventDto.date,
-        start: MoreThanOrEqual(createEventDto.start),
-        end: LessThanOrEqual(createEventDto.end)
+        start: LessThan(createEventDto.start),
+        end: MoreThan(createEventDto.end)
       }, {
         date: createEventDto.date,
-        start: LessThanOrEqual(createEventDto.start),
-        end: MoreThanOrEqual(createEventDto.end)
-      },{
+        start: LessThan(createEventDto.start),
+        end: MoreThan(createEventDto.start)
+      }, {
         date: createEventDto.date,
-        start: MoreThanOrEqual(createEventDto.start),
-        end: MoreThanOrEqual(createEventDto.end)
+        start: LessThan(createEventDto.end),
+        end: MoreThan(createEventDto.end)
       }]
     })
 
@@ -61,13 +67,13 @@ export class EventsService {
     }
     catch (err){
       await this.eventsRepository.delete(event.id);
-      console.log(err)
       throw new InternalServerErrorException("Can't create this event right now. Try again later");
     }
 
-    this.twitterService.createPost(
-      "Test\n",
-      this.configService.get('url') + "/events/img/" + event.id
+    this.twitterService.createPostWithImg(
+      `${event.name}\n${event.description}\n\n${event.date}\n${event.start + '-' + event.end}` + 
+      `\n${event.place.name}\n${event.place.address.city + ", " + event.place.address.other}`,
+      img
      )
     .catch();
 
@@ -76,7 +82,6 @@ export class EventsService {
 
   async addUser(id: string): Promise<number> {
     const [date, time] = new Date().toISOString().slice(0, 19).replace('T', ' ').split(' ');
-    console.log(date, time);
     
     const event = await this.eventsRepository.findOne({
       where: [{
