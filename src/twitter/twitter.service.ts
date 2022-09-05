@@ -15,9 +15,11 @@ export class TwitterService {
   private rwClient: TwitterApiReadWrite;
 
   
-  async createPost(text: string): Promise<boolean> {
+  async createPost(text: string, img: string): Promise<boolean> {
     try {
-      await this.rwClient.v2.tweet(text);
+      const id: string = await this.rwClient.v2.post(img);
+      await this.rwClient.v2.tweet(text, {media: {media_ids: [id]}});
+      this.rwClient.v2.post
     } catch (e) {
       console.log(e);
       throw new InternalServerErrorException("Problems with tweeting")

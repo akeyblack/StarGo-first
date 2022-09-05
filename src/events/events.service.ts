@@ -66,7 +66,8 @@ export class EventsService {
     }
 
     this.twitterService.createPost(
-      "Test\n" + this.configService.get('url') + "/events/img/" + event.id + "\n"
+      "Test\n",
+      this.configService.get('url') + "/events/img/" + event.id
      )
     .catch();
 
